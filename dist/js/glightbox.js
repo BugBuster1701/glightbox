@@ -605,8 +605,8 @@
     }, {
       key: "zoomOut",
       value: function zoomOut() {
-        this.img.parentNode.setAttribute('style', '');
-        this.img.setAttribute('style', this.img.getAttribute('data-style'));
+        this.img.parentNode.style = '';
+        this.img.style = this.img.getAttribute('data-style') ? this.img.getAttribute('data-style') : '';
         this.slide.classList.remove('zoomed');
         this.zoomedIn = false;
         this.currentX = null;
@@ -2029,7 +2029,7 @@
     instance.events['touch'] = touchInstance;
   }
 
-  var _version = '3.3.1';
+  var _version = '3.4.0';
   var isMobile$1 = isMobile();
   var isTouch$1 = isTouch();
   var html = document.getElementsByTagName('html')[0];
@@ -2874,8 +2874,8 @@
               var _slideTriggerNode$get;
               maxHeightValue = (_slideTriggerNode$get = slideTriggerNode.getAttribute('data-height')) !== null && _slideTriggerNode$get !== void 0 ? _slideTriggerNode$get : maxHeightValue;
             }
-            _imgNode.setAttribute('style', "max-height: calc(".concat(maxHeightValue, " - ").concat(descHeight, "px)"));
-            description.setAttribute('style', "max-width: ".concat(_imgNode.offsetWidth, "px;"));
+            _imgNode.style = 'max-height: calc('.concat(maxHeightValue, ' - ').concat(descHeight, 'px)');
+            description.style = 'max-width: '.concat(_imgNode.offsetWidth, 'px;');
           }
         }
         if (video) {
@@ -2915,14 +2915,14 @@
               width: vwidth * _ratio,
               height: vheight * _ratio
             };
-            video.parentNode.setAttribute('style', "max-width: ".concat(vsize.width, "px"));
+            video.parentNode.style = 'max-width: '.concat(vsize.width, 'px');
             if (descriptionResize) {
-              description.setAttribute('style', "max-width: ".concat(vsize.width, "px;"));
+              description.style = 'max-width: '.concat(vsize.width, 'px;');
             }
           } else {
             video.parentNode.style.maxWidth = "".concat(videoWidth);
             if (descriptionResize) {
-              description.setAttribute('style', "max-width: ".concat(videoWidth, ";"));
+              description.style = 'max-width: '.concat(videoWidth, ';');
             }
           }
         }

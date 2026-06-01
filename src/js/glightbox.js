@@ -10,7 +10,7 @@ import Slide from './core/slide.js';
 import touchNavigation from './core/touch-navigation.js';
 import * as _ from './utils/helpers.js';
 
-const version = '3.3.1';
+const version = '3.4.0';
 const isMobile = _.isMobile();
 const isTouch = _.isTouch();
 const html = document.getElementsByTagName('html')[0];
@@ -1093,8 +1093,8 @@ class GlightboxInit {
                     maxHeightValue = slideTriggerNode.getAttribute('data-height') ?? maxHeightValue;
                 }
 
-                imgNode.setAttribute('style', `max-height: calc(${maxHeightValue} - ${descHeight}px)`);
-                description.setAttribute('style', `max-width: ${imgNode.offsetWidth}px;`);
+                imgNode.style = 'max-height: calc('.concat(maxHeightValue, ' - ').concat(descHeight, 'px)');
+                description.style = 'max-width: '.concat(imgNode.offsetWidth, 'px;');
             }
         }
 
@@ -1142,15 +1142,15 @@ class GlightboxInit {
                 let vheight = video.offsetHeight;
                 let ratio = winHeight / vheight;
                 let vsize = { width: vwidth * ratio, height: vheight * ratio };
-                video.parentNode.setAttribute('style', `max-width: ${vsize.width}px`);
+                video.parentNode.style = 'max-width: '.concat(vsize.width, 'px');
 
                 if (descriptionResize) {
-                    description.setAttribute('style', `max-width: ${vsize.width}px;`);
+                    description.style = 'max-width: '.concat(vsize.width, 'px;');
                 }
             } else {
                 video.parentNode.style.maxWidth = `${videoWidth}`;
                 if (descriptionResize) {
-                    description.setAttribute('style', `max-width: ${videoWidth};`);
+                    description.style = 'max-width: '.concat(videoWidth, ';');
                 }
             }
         }
