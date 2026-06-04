@@ -1093,8 +1093,8 @@ class GlightboxInit {
                     maxHeightValue = slideTriggerNode.getAttribute('data-height') ?? maxHeightValue;
                 }
 
-                imgNode.setAttribute('style', `max-height: calc(${maxHeightValue} - ${descHeight}px)`);
-                description.setAttribute('style', `max-width: ${imgNode.offsetWidth}px;`);
+                imgNode.style = 'max-height: calc('.concat(maxHeightValue, ' - ').concat(descHeight, 'px)');
+                description.style = 'max-width: '.concat(imgNode.offsetWidth, 'px;');
             }
         }
 
