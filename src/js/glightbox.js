@@ -189,12 +189,8 @@ class GlightboxInit {
 
         const scrollBar = window.innerWidth - document.documentElement.clientWidth;
         if (scrollBar > 0) {
-            var styleSheet = document.createElement('style');
-            styleSheet.type = 'text/css';
-            styleSheet.className = 'gcss-styles';
-            styleSheet.innerText = `.gscrollbar-fixer {margin-right: ${scrollBar}px}`;
-            document.head.appendChild(styleSheet);
-            _.addClass(body, 'gscrollbar-fixer');
+            document.body.style.marginRight = `${scrollBar}px`;
+            _.addClass(body, 'gscrollbar-fixer'); // backwards compatibility
         }
 
         _.addClass(body, 'glightbox-open');
@@ -1247,6 +1243,7 @@ class GlightboxInit {
             const body = document.body;
             _.removeClass(html, 'glightbox-open');
             _.removeClass(body, 'glightbox-open touching gdesc-open glightbox-touch glightbox-mobile gscrollbar-fixer');
+            document.body.style.marginRight = '';
             this.modal.parentNode.removeChild(this.modal);
 
             this.trigger('close');
@@ -1256,10 +1253,6 @@ class GlightboxInit {
                 this.settings.onClose();
             }
 
-            const styles = document.querySelector('.gcss-styles');
-            if (styles) {
-                styles.parentNode.removeChild(styles);
-            }
             this.lightboxOpen = false;
             this.closing = null;
         });
