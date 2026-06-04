@@ -1142,15 +1142,15 @@ class GlightboxInit {
                 let vheight = video.offsetHeight;
                 let ratio = winHeight / vheight;
                 let vsize = { width: vwidth * ratio, height: vheight * ratio };
-                video.parentNode.setAttribute('style', `max-width: ${vsize.width}px`);
+                video.parentNode.style = 'max-width: '.concat(vsize.width, 'px');
 
                 if (descriptionResize) {
-                    description.setAttribute('style', `max-width: ${vsize.width}px;`);
+                    description.style = 'max-width: '.concat(vsize.width, 'px;');
                 }
             } else {
                 video.parentNode.style.maxWidth = `${videoWidth}`;
                 if (descriptionResize) {
-                    description.setAttribute('style', `max-width: ${videoWidth};`);
+                    description.style = 'max-width: '.concat(videoWidth, ';');
                 }
             }
         }
