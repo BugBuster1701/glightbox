@@ -936,12 +936,16 @@
     addClass(slideContainer, 'gvideo-container');
     slideMedia.insertBefore(createHTML('<div class="gvideo-wrapper"></div>'), slideMedia.firstChild);
     var videoWrapper = slide.querySelector('.gvideo-wrapper');
-    injectAssets(this.settings.plyr.css, 'Plyr');
+    if (typeof this.settings.plyr.css === 'function') {
+      this.settings.plyr.css();
+    } else {
+      injectAssets(this.settings.plyr.css, 'Plyr');
+    }
     var url = data.href;
     var provider = data === null || data === void 0 ? void 0 : data.videoProvider;
     var customPlaceholder = false;
     slideMedia.style.maxWidth = data.width;
-    injectAssets(this.settings.plyr.js, 'Plyr', function () {
+    var initPlyr = function initPlyr(Plyr, config) {
       if (!provider && url.match(/vimeo\.com\/([0-9]*)/)) {
         provider = 'vimeo';
       }
@@ -950,23 +954,31 @@
       }
       if (provider === 'local' || !provider) {
         provider = 'local';
-        var html = '<video id="' + videoID + '" ';
-        html += "style=\"background:#000; max-width: ".concat(data.width, ";\" ");
-        html += 'preload="metadata" ';
-        html += 'x-webkit-airplay="allow" ';
-        html += 'playsinline ';
-        html += 'controls ';
-        html += 'class="gvideo-local">';
-        html += "<source src=\"".concat(url, "\">");
-        html += '</video>';
-        customPlaceholder = createHTML(html);
+        var video = document.createElement('video');
+        video.id = videoID;
+        video.className = 'gvideo-local';
+        video.preload = 'metadata';
+        video.playsInline = true;
+        video.controls = true;
+        video.style.background = '#000';
+        video.style.maxWidth = data.width;
+        video.setAttribute('x-webkit-airplay', 'allow');
+        var source = document.createElement('source');
+        source.src = url;
+        video.appendChild(source);
+        customPlaceholder = video;
       }
-      var placeholder = customPlaceholder ? customPlaceholder : createHTML("<div id=\"".concat(videoID, "\" data-plyr-provider=\"").concat(provider, "\" data-plyr-embed-id=\"").concat(url, "\"></div>"));
+      if (!customPlaceholder) {
+        customPlaceholder = document.createElement('div');
+        customPlaceholder.id = videoID;
+        customPlaceholder.dataset.plyrProvider = provider;
+        customPlaceholder.dataset.plyrEmbedId = url;
+      }
       addClass(videoWrapper, "".concat(provider, "-video gvideo"));
-      videoWrapper.appendChild(placeholder);
+      videoWrapper.appendChild(customPlaceholder);
       videoWrapper.setAttribute('data-id', videoID);
       videoWrapper.setAttribute('data-index', index);
-      var playerConfig = has(_this.settings.plyr, 'config') ? _this.settings.plyr.config : {};
+      var playerConfig = config || (has(_this.settings.plyr, 'config') ? _this.settings.plyr.config : {});
       var player = new Plyr('#' + videoID, playerConfig);
       player.on('ready', function (event) {
         videoPlayers[videoID] = event.detail.plyr;
@@ -981,7 +993,16 @@
       });
       player.on('enterfullscreen', handleMediaFullScreen);
       player.on('exitfullscreen', handleMediaFullScreen);
-    });
+    };
+    if (typeof this.settings.plyr.js === 'function') {
+      this.settings.plyr.js().then(function (v) {
+        return initPlyr(v.Plyr, v.config);
+      });
+    } else {
+      injectAssets(this.settings.plyr.js, 'Plyr', function () {
+        return initPlyr(window.Plyr);
+      });
+    }
   }
   function handleMediaFullScreen(event) {
     var media = closest(event.target, '.gslide-media');
@@ -1976,7 +1997,7 @@
           lastZoomedPosX = null;
           zoomedPosX = null;
           zoomedPosY = null;
-          mediaImage.setAttribute('style', '');
+          mediaImage.style = '';
           return;
         }
         if (scale > maxScale) {
@@ -2186,11 +2207,7 @@
         var body = document.body;
         var scrollBar = window.innerWidth - document.documentElement.clientWidth;
         if (scrollBar > 0) {
-          var styleSheet = document.createElement('style');
-          styleSheet.type = 'text/css';
-          styleSheet.className = 'gcss-styles';
-          styleSheet.innerText = ".gscrollbar-fixer {margin-right: ".concat(scrollBar, "px}");
-          document.head.appendChild(styleSheet);
+          document.body.style.marginRight = "".concat(scrollBar, "px");
           addClass(body, 'gscrollbar-fixer');
         }
         addClass(body, 'glightbox-open');
@@ -3000,14 +3017,11 @@
           var body = document.body;
           removeClass(html, 'glightbox-open');
           removeClass(body, 'glightbox-open touching gdesc-open glightbox-touch glightbox-mobile gscrollbar-fixer');
+          document.body.style.marginRight = '';
           _this8.modal.parentNode.removeChild(_this8.modal);
           _this8.trigger('close');
           if (isFunction(_this8.settings.onClose)) {
             _this8.settings.onClose();
-          }
-          var styles = document.querySelector('.gcss-styles');
-          if (styles) {
-            styles.parentNode.removeChild(styles);
           }
           _this8.lightboxOpen = false;
           _this8.closing = null;
