@@ -99,7 +99,7 @@ export default function slideVideo(slide, data, index, callback) {
         );
         player.on('enterfullscreen', handleMediaFullScreen);
         player.on('exitfullscreen', handleMediaFullScreen);
-    }
+    };
 
     if (typeof this.settings.plyr.js === 'function') {
         this.settings.plyr.js().then(v => initPlyr(v.Plyr, v.config));
