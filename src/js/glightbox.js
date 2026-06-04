@@ -1253,10 +1253,6 @@ class GlightboxInit {
                 this.settings.onClose();
             }
 
-            const styles = document.querySelector('.gcss-styles');
-            if (styles) {
-                styles.parentNode.removeChild(styles);
-            }
             this.lightboxOpen = false;
             this.closing = null;
         });
